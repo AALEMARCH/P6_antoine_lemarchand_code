@@ -40,8 +40,8 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
-      const filename = sauce.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
+      const fileName = sauce.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${fileName}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: "Sauce supprimé!" }))
           .catch((error) => res.status(400).json({ error }));
@@ -53,13 +53,13 @@ exports.deleteSauce = (req, res, next) => {
 //Renvoie une seul sauce
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json({ sauce }))
+    .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
 
 //Renvoie toutes les sauces de la BDD
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
-    .then((sauces) => res.status(200).json({ sauces }))
+    .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
