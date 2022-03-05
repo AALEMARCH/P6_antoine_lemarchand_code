@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 //donne acces au chemin du systeme de fichier
 const path = require("path");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 //les routes sauces et utilisateurs
 const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
@@ -16,7 +19,7 @@ const app = express();
 //connexion à la BDD
 mongoose
   .connect(
-    "mongodb+srv://AntoineL:RHkgsAStOFLHGo22@cluster0.yptro.mongodb.net/Projet6?retryWrites=true&w=majority",
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.yptro.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
