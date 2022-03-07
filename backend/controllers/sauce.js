@@ -3,17 +3,25 @@ const fs = require("fs");
 
 //Créé une nouvelle sauce
 exports.createSauce = (req, res, next) => {
-  const sauceObject = JSON.parse(req.body.sauce);
-  delete sauceObject._id; //ont enleve l'ID du corp de la requête car il sera générer par mongoDB
-  //création d'une nouvelle instance de mon model Sauce
+  const sauceObject = JSON.parse(
+    req.body.sauce
+  ); /*annalyse la chaine de caractère et intègre la valeur Javascript*/
+  delete sauceObject._id; /*ont enleve l'ID du corp de la requête car il sera générer par mongoDB*/
+
   const sauce = new Sauce({
-    ...sauceObject, //l'opérateur spread copie les champs du corps de la requête
+    /*création d'une nouvelle instance de mon model Sauce*/
+    ...sauceObject /*l'opérateur spread copie les champs du corps de la requête*/,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
+    /*Initialisation des données*/
+    likes: 0,
+    dislike: 0,
+    usersLiked: [],
+    usersDisliked: [],
   });
   sauce
-    .save() //ont enregistre l'objet dans la BDD
+    .save() /*ont enregistre l'objet dans la BDD*/
     .then(() => res.status(201).json({ message: "Sauce enregistré !" }))
     .catch((error) => res.status(400).json({ error }));
 };
@@ -36,7 +44,7 @@ exports.modifySauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-//Supprime une sauce
+//Supprime une sauce avec l'_id fourni
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
@@ -50,16 +58,19 @@ exports.deleteSauce = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-//Renvoie une seul sauce
+//Renvoie une seul sauce avec l'id fourni
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
 
-//Renvoie toutes les sauces de la BDD
+//Renvoie un tableau de toutes les sauces de la BDD
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
+
+//Gestion des likes dislike
+// exports.likeSauce = (req, res, next) => {};
