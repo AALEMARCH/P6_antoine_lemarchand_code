@@ -1,11 +1,11 @@
-//importation du package http natif de node
+// Importation du package http natif de node
 
 const http = require("http");
 const app = require("./app");
 const dotenv = require("dotenv");
 dotenv.config();
 
-//normalizePort renvoie un port valide
+// normalizePort renvoie un port valide
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
 
@@ -17,11 +17,11 @@ const normalizePort = (val) => {
   }
   return false;
 };
-//Je configure le serveur pour qu'il ecoute le port 3000
+// Je configure le serveur pour qu'il écoute le port 3000
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-//Recherche les différentes erreurs, les gères, les enregistres dans le serveur
+// Recherche les différentes erreurs, les gère, les enregistre dans le serveur
 const errorHandler = (error) => {
   if (error.syscall !== "listen") {
     throw error;

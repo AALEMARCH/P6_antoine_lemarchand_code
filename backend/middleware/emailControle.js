@@ -1,5 +1,7 @@
+// Importation du package validator
 const validator = require("validator");
 
+// Vérification si la chaîne est un Email
 module.exports = (req, res, next) => {
   const { email } = req.body;
 

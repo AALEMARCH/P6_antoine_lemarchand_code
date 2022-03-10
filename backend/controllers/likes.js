@@ -1,24 +1,24 @@
-//Gestion des likes dislike
+// Contrôleur pour le like et dislike
 
-//imports du model de sauce a liker
+// Imports du modèle de sauce à liker
 const Sauce = require("../models/Sauce");
 
 exports.likeSauce = (req, res, next) => {
   console.log("je suis dans le controllers like");
 
-  const userId = req.body.userId; // id utilisateur qui se trouve dans le corp de la requete.
-  const sauceId = req.params.id; // id de l'objet envoyer dans l'url de la requete.
-  const likes = req.body.like; // status likes qui se trouve dans le corp de la requete.
+  const userId = req.body.userId; // Id utilisateur qui se trouve dans le corps de la requête
+  const sauceId = req.params.id; // Id de l'objet envoyait dans l'url de la requête
+  const likes = req.body.like; // Statut likes qui se trouve dans le corps de la requête
 
-  //mise en place d'un switch case() pour les cas de like et dislike
+  // Mise en place d'un switch case() pour les cas de like et dislike
   switch (likes) {
     case 1:
-      // ajout d'un like
+      // Ajout d'un like
       Sauce.updateOne(
         { _id: sauceId },
         {
-          $inc: { likes: +1 }, // operateur qui permet l'incrément de 1 avec la fonction updateOne (doc MongoDb)
-          $push: { usersLiked: userId }, // opérateur mgdb qui inclus la valeur dans le tableau UsersLiked
+          $inc: { likes: +1 }, // Opérateur qui permet l'incrément de 1 avec la fonction updateOne (doc MongoDb)
+          $push: { usersLiked: userId }, // Opérateur mgdb qui inclut la valeur dans le tableau UsersLiked
         }
       )
         .then(() => res.status(201).json({ message: "Ajout du like !" }))
@@ -26,7 +26,7 @@ exports.likeSauce = (req, res, next) => {
       break;
 
     case -1:
-      // ajout d'un dislike
+      // Ajout d'un dislike
       Sauce.updateOne(
         { _id: sauceId },
         {
@@ -42,13 +42,13 @@ exports.likeSauce = (req, res, next) => {
       // Suppression like dislike si le client annule son choix
       Sauce.findOne({ _id: sauceId })
         .then((sauce) => {
-          //like = 0 (likes = 0, pas de vote )
+          // Like = 0 (likes = 0, pas de vote)
           if (sauce.usersLiked.includes(userId)) {
             Sauce.updateOne(
               { _id: sauceId },
               {
                 $inc: { likes: -1 },
-                $pull: { usersLiked: userId },
+                $pull: { usersLiked: userId }, // Supprime du tableau la valeur de usersLiked
               }
             )
               .then(() => res.status(201).json({ message: "like supprimé !" }))
